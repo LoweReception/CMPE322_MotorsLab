@@ -10,40 +10,34 @@
 #include <xc.h>
 #include "buttons.h"
 
-/*
- * PERIPHERAL INITALIZATION TEMPLATE
- *      set OSCx
- *      set PORTx
- *      set TRISx
- */
-
 /* init_buttons()
  * inputs: none        outputs: none
- *      Initalizes On-board buttons.
+ * initializes on-board buttons as digital input, results occur in PORTx SFR. 
  */
 void init_buttons(){
-    ODCACLR = 0xFFFF;   // clears PORTA OSC SFR
+    ODCACLR = 0xFFFF;   // clears PORTA ODC SFR
     PORTA = 0x0;        // clears PORTA to transmit logic low
-    TRISA = 0xFFFF;     // sets PORTA TRIS SFR to output
-    // PORTA now trasmits digital logic 0 to on all pins
+    TRISA = 0xFFFF;     // sets PORTA TRIS SFR to input
 }
 
-/* get_buttonX();
+/* 
+ * get_buttonX();
  * input: none          outputs: state of button (boolean)
  * checks and returns the state of the specified button
- *      contains debouncing fuction for error detection.
+ * contains debouncing function for error detection.
  *
- * Button1 and Button2 are identical with the exception being the bit which
- *      the fuction checks. See header file for definitions of BUTTONx.\
- *      Only get_button1() is commented for the above reason.
+ * Button1 and Button2 are identical with the exception being the bit which button
+ * the function checks. See header file for definitions of BUTTONx.
+ * 
+ * Only get_button1() is commented for the above reason.
  */
 int get_button1(){
-    int i = 0;              // interator
-    int btn_shadow;         // shadow "begister", follows phyical button state.
+    int i = 0;              // iterator
+    int btn_shadow;         // shadow "register"( bit), follows physical button state.
 
     // simple debounce function
     while ( i < DEBOUNCE_TIME){         // while still within debounce period
-        btn_shadow = BUTTON1;           // set shadow = phsical button state
+        btn_shadow = BUTTON1;           // set shadow = physical button state
         // while still in debounce period, if shadow and physical differ,
         // restart debounce iteration.
         for (i = 0; i < DEBOUNCE_TIME; i++){
